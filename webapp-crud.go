@@ -1,7 +1,8 @@
 package main
 
 import (
-  "encoding/json"
+  "fmt"
+  "strconv"
   "net/http"
   "github.com/galuhest/item-crud-golang"
   "github.com/julienschmidt/httprouter"
@@ -11,28 +12,76 @@ import (
 func main() {
   router := httprouter.New()
   router.GET("/", Index)
-  router.GET("/item/:id", Hello)
-  router.POST("/item", Hello)
-  router.POST("/item/:id", Hello)
-  router.POST("/item/:id/delete", Hello)
+  router.GET("/item/:id", GetHandler)
+  router.POST("/item", CreateHandler)
+  router.POST("/item/:id", UpdateHandler)
+  router.POST("/item/:id/delete", DeleteHandler)
 
   log.Fatal(http.ListenAndServe(":8080", router))
 }
 
-func makeHandler(fn func(http.ResponseWriter, *http.Request, string)) http.HandlerFunc {
-  return func(w http.ResponseWriter, r *http.Request) {
-    m := validPath.FindStringSubmatch(r.URL.Path)
-    if m == nil {
-      http.NotFound(w, r)
-      return
-    }
-    fn(w, r, m[2])
-  }
+func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+    fmt.Fprint(w, "Welcome!\n")
 }
 
-func getHandler(w http.ResponseWriter, r *http.Request, title string)	{
 
-  js = crud.GetItem()
+func GetHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)	{
+  temp := ps.ByName("id") 
+  id, err := strconv.Atoi(temp)
+  if err != nil {
+    log.Fatal("cant convert str to int")
+  }
+  db := crud.ConnectDb()
+  defer db.Close()
+  response := crud.GetItem(db, id)
+  js_response := []byte(response)
   w.Header().Set("Content-Type", "application/json")
-  w.Write(js) 
+  w.Write(js_response) 
+}
+
+func CreateHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)  {
+  err := r.ParseForm()
+  if err != nil {
+    panic(err)
+  }
+  v := r.Form
+  name := v.Get("name")
+  db := crud.ConnectDb()
+  defer db.Close()
+  response := crud.CreateItem(db, name)
+  js_response := []byte(response)
+  w.Header().Set("Content-Type", "application/json")
+  w.Write(js_response) 
+}
+
+func UpdateHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)  {
+  err := r.ParseForm()
+  if err != nil {
+    panic(err)
+  }
+  v := r.Form
+  temp := ps.ByName("id") 
+  id, err := strconv.Atoi(temp)
+  name := v.Get("name")
+  db := crud.ConnectDb()
+  defer db.Close()
+  response := crud.UpdateItem(db, id, name)
+  js_response := []byte(response)
+  w.Header().Set("Content-Type", "application/json")
+  w.Write(js_response) 
+}
+
+func DeleteHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)  {
+  err := r.ParseForm()
+  if err != nil {
+    panic(err)
+  }
+  temp := ps.ByName("id") 
+  id, err := strconv.Atoi(temp)
+  db := crud.ConnectDb()
+  defer db.Close()
+  response := crud.DeleteItem(db, id)
+  js_response := []byte(response)
+  w.Header().Set("Content-Type", "application/json")
+  w.Write(js_response) 
 }
