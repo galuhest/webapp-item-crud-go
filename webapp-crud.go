@@ -20,11 +20,12 @@ func main() {
   log.Fatal(http.ListenAndServe(":8080", router))
 }
 
+// Halaman index untuk root
 func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
     fmt.Fprint(w, "Welcome!\n")
 }
 
-
+// Handler untuk mengambil nama user
 func GetHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)	{
   temp := ps.ByName("id") 
   id, err := strconv.Atoi(temp)
@@ -39,6 +40,7 @@ func GetHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)	{
   w.Write(js_response) 
 }
 
+// Handler untuk membuat user baru
 func CreateHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)  {
   err := r.ParseForm()
   if err != nil {
@@ -54,6 +56,7 @@ func CreateHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
   w.Write(js_response) 
 }
 
+// Handler untuk mengganti nama user 
 func UpdateHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)  {
   err := r.ParseForm()
   if err != nil {
@@ -71,6 +74,7 @@ func UpdateHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
   w.Write(js_response) 
 }
 
+// Handler untuk menghapus user
 func DeleteHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)  {
   err := r.ParseForm()
   if err != nil {
