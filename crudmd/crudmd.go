@@ -5,6 +5,7 @@ import (
 	"log"
 	"flag"
   "strconv"
+  "strings"
   "encoding/json"
 	"github.com/joho/godotenv"
 	"github.com/galuhest/item-crud-golang"
@@ -40,7 +41,7 @@ func main() {
   	args = flag.Args()
   }
 
-  crud := args[0]
+  crud := strings.ToLower(args[0])
   switch crud{
   case "get":
   	GetItem(args[1:])
