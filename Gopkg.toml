@@ -27,7 +27,7 @@
 
 [[constraint]]
   branch = "master"
-  name = "github.com/galuhest/item-crud-golang"
+  name = "github.com/galuhest/item-crud-go"
 
 [[constraint]]
   name = "github.com/joho/godotenv"
