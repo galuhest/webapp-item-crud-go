@@ -2,10 +2,10 @@
 
 
 [[projects]]
-  branch = "master"
+  branch = "crud"
   name = "github.com/galuhest/item-crud-go"
   packages = ["."]
-  revision = "809d83408f21b9639c5351656f013f8601271c11"
+  revision = "32214ed55b23766fddce13ef70ecdd91b1a701ad"
 
 [[projects]]
   branch = "master"
@@ -40,6 +40,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "742b1a3b8cf2a0fc7362caf6e7cf3b7a800497a3fb7a18829d840ba94b409e29"
+  inputs-digest = "b3abce6958d13f79206f4126e70d4c90a12cea40f222faf4df6447bd8ec87de3"
   solver-name = "gps-cdcl"
   solver-version = 1

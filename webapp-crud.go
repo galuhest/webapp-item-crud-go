@@ -32,9 +32,15 @@ func GetHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)   
     if err != nil {
         log.Fatal("cant convert str to int")
     }
-    db := crud.ConnectDb()
+    db, err:= crud.ConnectDb()
+    if err != nil {
+        log.Fatal("cant open database")
+    }
     defer db.Close()
-    response := crud.GetItem(db, id)
+    response, err := crud.GetItem(db, id)
+    if err != nil {
+        log.Fatal(err.Error())
+    }
     js_response := []byte(response)
     w.Header().Set("Content-Type", "application/json")
     w.Write(js_response) 
@@ -48,9 +54,15 @@ func CreateHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
     }
     v := r.Form
     name := v.Get("name")
-    db := crud.ConnectDb()
+    db, err := crud.ConnectDb()
+    if err != nil {
+        log.Fatal(err.Error())
+    }
     defer db.Close()
-    response := crud.CreateItem(db, name)
+    response, err := crud.CreateItem(db, name)
+    if err != nil {
+        log.Fatal(err.Error())
+    }
     js_response := []byte(response)
     w.Header().Set("Content-Type", "application/json")
     w.Write(js_response) 
@@ -66,9 +78,15 @@ func UpdateHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
     temp := ps.ByName("id") 
     id, err := strconv.Atoi(temp)
     name := v.Get("name")
-    db := crud.ConnectDb()
+    db, err := crud.ConnectDb()
+    if err != nil {
+        log.Fatal(err.Error())
+    }
     defer db.Close()
-    response := crud.UpdateItem(db, id, name)
+    response, err := crud.UpdateItem(db, id, name)
+    if err != nil {
+        log.Fatal(err.Error())
+    }
     js_response := []byte(response)
     w.Header().Set("Content-Type", "application/json")
     w.Write(js_response) 
@@ -82,9 +100,15 @@ func DeleteHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
     }
     temp := ps.ByName("id") 
     id, err := strconv.Atoi(temp)
-    db := crud.ConnectDb()
+    db, err := crud.ConnectDb()
+    if err != nil {
+        log.Fatal(err.Error())
+    }
     defer db.Close()
-    response := crud.DeleteItem(db, id)
+    response, err := crud.DeleteItem(db, id)
+    if err != nil {
+        log.Fatal(err.Error())
+    }
     js_response := []byte(response)
     w.Header().Set("Content-Type", "application/json")
     w.Write(js_response) 
