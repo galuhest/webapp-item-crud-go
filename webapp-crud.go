@@ -26,7 +26,7 @@ func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 }
 
 // Handler untuk mengambil nama user
-func GetHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)	{
+func GetHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)   {
   temp := ps.ByName("id") 
   id, err := strconv.Atoi(temp)
   if err != nil {
