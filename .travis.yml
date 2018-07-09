@@ -19,9 +19,7 @@ before_install:
   - sudo service mysql restart
   - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
 install:
-  - go get github.com/joho/godotenv
-  - go get github.com/julienschmidt/httprouter
-  - go get github.com/galuhest/item-crud-golang
+  - $GOPATH/bin/dep ensure
   - $GOPATH/bin/dep ensure -update
 script:
   - go test
