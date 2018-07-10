@@ -5,7 +5,7 @@
   branch = "crud"
   name = "github.com/galuhest/item-crud-go"
   packages = ["."]
-  revision = "32214ed55b23766fddce13ef70ecdd91b1a701ad"
+  revision = "65fe33d4cb0482b4e618876ce45dbaa32ae9f59c"
 
 [[projects]]
   branch = "master"

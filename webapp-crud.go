@@ -36,8 +36,8 @@ func GetHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)   
     if err != nil {
         log.Fatal("cant open database")
     }
-    defer db.Close()
-    response, err := crud.GetItem(db, id)
+    defer db.CloseDb()
+    response, err := db.GetItem(id)
     if err != nil {
         log.Fatal(err.Error())
     }
@@ -58,8 +58,8 @@ func CreateHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
     if err != nil {
         log.Fatal(err.Error())
     }
-    defer db.Close()
-    response, err := crud.CreateItem(db, name)
+    defer db.CloseDb()
+    response, err := db.CreateItem(name)
     if err != nil {
         log.Fatal(err.Error())
     }
@@ -82,8 +82,8 @@ func UpdateHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
     if err != nil {
         log.Fatal(err.Error())
     }
-    defer db.Close()
-    response, err := crud.UpdateItem(db, id, name)
+    defer db.CloseDb()
+    response, err := db.UpdateItem(id, name)
     if err != nil {
         log.Fatal(err.Error())
     }
@@ -104,8 +104,8 @@ func DeleteHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
     if err != nil {
         log.Fatal(err.Error())
     }
-    defer db.Close()
-    response, err := crud.DeleteItem(db, id)
+    defer db.CloseDb()
+    response, err := db.DeleteItem(id)
     if err != nil {
         log.Fatal(err.Error())
     }
