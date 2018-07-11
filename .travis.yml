@@ -21,4 +21,4 @@ before_install:
 install:
   - $GOPATH/bin/dep ensure
 script:
-  - go test -v ./webapp
+  - go test -v ./app/webapp
