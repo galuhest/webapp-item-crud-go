@@ -23,4 +23,5 @@ install:
   - go install ./webapp/
   - go build ./webapp/
 script:
-  - go test -v ./webapp/
+  - cd webapp
+  - go test -v
