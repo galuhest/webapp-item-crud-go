@@ -6,7 +6,6 @@ import (
     "flag"
     "strconv"
     "strings"
-    "encoding/json"
     "github.com/joho/godotenv"
     "github.com/galuhest/item-crud-go"
 )
@@ -64,14 +63,15 @@ func GetItem(args []string) {
     if err != nil   {
         log.Fatal("invalid id parameter")
     }
-    db := crud.ConnectDb()
-    crud_response := crud.GetItem(db, id)
-    data := &Response{Status: "", Payload : nil}
-    err = json.Unmarshal([]byte(crud_response), data)
+    db, err := crud.ConnectDb()
     if err != nil {
-        panic("cant create data")
+        panic("cant connect db")
     }
-    fmt.Println(data.Payload["name"])
+    crud_response, err := db.GetItem(id)
+    if err != nil {
+        panic("cant gt item")
+    }
+    fmt.Println(crud_response.Payload["name"])
 }
 
 func CreateItem(args []string)  {
@@ -79,14 +79,15 @@ func CreateItem(args []string)  {
         log.Fatal("Invalid amount of parameters")
     }
     name := args[0]
-    db := crud.ConnectDb()
-    crud_response := crud.CreateItem(db, name)
-    data := &Response{Status: "", Payload : nil}
-    err := json.Unmarshal([]byte(crud_response), data)
+    db, err := crud.ConnectDb()
     if err != nil {
         panic("cant create data")
     }
-    fmt.Println(data.Payload["id"])
+    crud_response, err := db.CreateItem(name)
+    if err != nil {
+        panic("cant create data")
+    }
+    fmt.Println(crud_response.Payload["id"])
 }
 
 func UpdateItem(args []string)  {
@@ -98,14 +99,15 @@ func UpdateItem(args []string)  {
         log.Fatal("invalid id parameter")
     }
     name := args[1]
-    db := crud.ConnectDb()
-    crud_response := crud.UpdateItem(db, id, name)
-    data := &Response{Status: "", Payload : nil}
-    err = json.Unmarshal([]byte(crud_response), data)
+    db,err := crud.ConnectDb()
     if err != nil {
         panic("cant create data")
     }
-    fmt.Println(data.Status)
+    crud_response, err := db.UpdateItem(id, name)
+    if err != nil {
+        panic("cant create data")
+    }
+    fmt.Println(crud_response.Status)
 }
 
 func DeleteItem(args []string)  {
@@ -116,12 +118,10 @@ func DeleteItem(args []string)  {
     if err != nil   {
         log.Fatal("invalid id parameter")
     }
-    db := crud.ConnectDb()
-    crud_response := crud.DeleteItem(db, id)
-    data := &Response{Status: "", Payload : nil}
-    err = json.Unmarshal([]byte(crud_response), data)
+    db, err := crud.ConnectDb()
+    crud_response, err := db.DeleteItem(id)
     if err != nil {
         panic("cant create data")
     }
-    fmt.Println(data.Status)
+    fmt.Println(crud_response.Status)
 }
