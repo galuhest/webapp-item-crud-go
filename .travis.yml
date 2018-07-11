@@ -21,4 +21,5 @@ before_install:
 install:
   - $GOPATH/bin/dep ensure
 script:
-  - go test -v ./webapp
+  - cd $GOPATH/src/github.com/galuhest/webapp-item-crud-go/webapp
+  - go test -v
