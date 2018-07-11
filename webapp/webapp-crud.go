@@ -10,6 +10,12 @@ import (
     "log"
 )
 
+var db *crud.MyDb
+
+func init() {
+    db, _ = crud.ConnectDb()
+}
+
 func main() {
     router := httprouter.New()
     router.GET("/", Index)
@@ -17,7 +23,7 @@ func main() {
     router.POST("/item", CreateHandler)
     router.POST("/item/:id", UpdateHandler)
     router.POST("/item/:id/delete", DeleteHandler)
-
+    defer db.CloseDb()
     log.Fatal(http.ListenAndServe(":8080", router))
 }   
 
@@ -26,24 +32,37 @@ func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
     fmt.Fprint(w, "Welcome!\n")
 }
 
+func Error(status, err_msg string) []byte {
+
+    payload := make(map[string]string)
+    payload["err_msg"] = err_msg
+    response := crud.Response{Status : "500", Payload : payload}
+    js_response, _ := json.Marshal(response)
+    return js_response
+}
+
 // Handler untuk mengambil nama user
 func GetHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)   {
     temp := ps.ByName("id") 
     id, err := strconv.Atoi(temp)
     if err != nil {
-        log.Fatal("cant convert str to int")
+        js_response := Error("500", err.Error())
+        w.Header().Set("Content-Type", "application/json")
+        w.Write(js_response) 
+        return
     }
-    db, err:= crud.ConnectDb()
-    if err != nil {
-        log.Fatal("cant open database")
-    }
-    defer db.CloseDb()
     response, err := db.GetItem(id)
     if err != nil {
+        js_response := Error("500", err.Error())
+        w.Header().Set("Content-Type", "application/json")
+        w.Write(js_response) 
         return
     }
     js_response, err := json.Marshal(response)
     if err != nil {
+        js_response := Error("500", err.Error())
+        w.Header().Set("Content-Type", "application/json")
+        w.Write(js_response) 
         return
     }
     w.Header().Set("Content-Type", "application/json")
@@ -54,18 +73,26 @@ func GetHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)   
 func CreateHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)  {
     err := r.ParseForm()
     if err != nil {
-        panic(err)
+        js_response := Error("500", err.Error())
+        w.Header().Set("Content-Type", "application/json")
+        w.Write(js_response) 
+        return
     }
     v := r.Form
     name := v.Get("name")
-    db, err := crud.ConnectDb()
-    if err != nil {
-        log.Fatal(err.Error())
-    }
-    defer db.CloseDb()
     response, err := db.CreateItem(name)
+    if err != nil {
+        js_response := Error("500", err.Error())
+        w.Header().Set("Content-Type", "application/json")
+        w.Write(js_response) 
+        return
+    }
+
     js_response, err := json.Marshal(response)
     if err != nil {
+        js_response := Error("500", err.Error())
+        w.Header().Set("Content-Type", "application/json")
+        w.Write(js_response) 
         return
     }
     w.Header().Set("Content-Type", "application/json")
@@ -76,24 +103,28 @@ func CreateHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 func UpdateHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)  {
     err := r.ParseForm()
     if err != nil {
-        panic(err)
+        js_response := Error("500", err.Error())
+        w.Header().Set("Content-Type", "application/json")
+        w.Write(js_response) 
+        return
     }
     v := r.Form
     temp := ps.ByName("id") 
     id, err := strconv.Atoi(temp)
     name := v.Get("name")
-    db, err := crud.ConnectDb()
-    if err != nil {
-        log.Fatal(err.Error())
-    }
-    defer db.CloseDb()
     response, err := db.UpdateItem(id, name)
     if err != nil {
-        return    
+        js_response := Error("500", err.Error())
+        w.Header().Set("Content-Type", "application/json")
+        w.Write(js_response) 
+        return
     }
     js_response, err := json.Marshal(response)
     if err != nil {
-        return    
+        js_response := Error("500", err.Error())
+        w.Header().Set("Content-Type", "application/json")
+        w.Write(js_response) 
+        return
     }
     w.Header().Set("Content-Type", "application/json")
     w.Write(js_response) 
@@ -103,22 +134,26 @@ func UpdateHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 func DeleteHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)  {
     err := r.ParseForm()
     if err != nil {
-        panic(err)
+        js_response := Error("500", err.Error())
+        w.Header().Set("Content-Type", "application/json")
+        w.Write(js_response) 
+        return
     }
     temp := ps.ByName("id") 
     id, err := strconv.Atoi(temp)
-    db, err := crud.ConnectDb()
-    if err != nil {
-        return    
-    }
-    defer db.CloseDb()
     response, err := db.DeleteItem(id)
     if err != nil {
-        return    
+        js_response := Error("500", err.Error())
+        w.Header().Set("Content-Type", "application/json")
+        w.Write(js_response) 
+        return
     }
     js_response, err := json.Marshal(response)
     if err != nil {
-        return    
+        js_response := Error("500", err.Error())
+        w.Header().Set("Content-Type", "application/json")
+        w.Write(js_response) 
+        return
     }
     w.Header().Set("Content-Type", "application/json")
     w.Write(js_response) 
