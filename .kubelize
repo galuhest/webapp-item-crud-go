@@ -1,0 +1,23 @@
+templateVersion: v2.2.0
+projectName: webapp-go
+services:
+- name: webapp
+  port: "8080"
+  environments:
+  - name: production
+    replica: "2"
+  - name: sandbox
+    replica: "1"
+  - name: staging
+    replica: "1"
+  nodePort: "38080"
+  healthz: healthz
+  maxMem: "1"
+  maxCpu: "1"
+  minMem: "0.1"
+  minCpu: "1"
+  limit: false
+  timeout: "1"
+  delay: "60"
+  language: go
+  consul: envconsul
