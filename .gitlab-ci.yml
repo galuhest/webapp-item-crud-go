@@ -30,7 +30,7 @@ compile:
   stage: pre-build
   image: registry.bukalapak.io/sre/gudang/golang:1.0.1
   only:
-  - develop
+  - webapp
   before_script: *prep-go-dir
   script:
   - make compile
@@ -62,7 +62,7 @@ build-image:
   tags:
   - bare-metal
   only:
-  - triggers
+  - webapp
   script:
   - export VERSION=${CI_COMMIT_TAG:-$CI_COMMIT_SHA}
   - kubectl config use-context $VAR_KUBE_CONTEXT
