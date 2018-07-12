@@ -30,7 +30,7 @@ compile:
   stage: pre-build
   image: registry.bukalapak.io/sre/gudang/golang:1.0.1
   only:
-  - triggers
+  - develop
   before_script: *prep-go-dir
   script:
   - make compile

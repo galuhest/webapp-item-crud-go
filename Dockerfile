@@ -1,12 +1,13 @@
 FROM golang:latest 
-RUN mkdir /app
-ADD . /app/
-WORKDIR /app
+RUN mkdir /apps
+ADD . /apps/
+WORKDIR /apps
 EXPOSE 8080
 ENV DATABASE onboarding
 ENV DB_USER root
 ENV DB_PASSWORD root
 ENV DB_HOST unix
-RUN ls vendor/github.com/galuhest
+RUN go get -u -insecure github.com/golang/dep/cmd/dep
+RUN dep ensure
 RUN go build app/webapp/main.go 
-CMD ["/app/main"]
+CMD ["/app/webapp/main"]
